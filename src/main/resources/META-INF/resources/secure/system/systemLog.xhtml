@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:dpc="http://java.sun.com/jsf/composite/components/dpc"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+
+<ui:composition template="/theme.xhtml">
+    <ui:param name="centerTitle" value="System Log"/>
+    <ui:param name="rightTitle" value=""/>
+    <ui:param name="rightWidth" value="0"/>
+    <ui:param name="labelWidth" value="100px"/>
+
+    <ui:define name="center">
+
+        <h:panelGroup id="filterPanels">
+            <p:panel header="Filter" toggleable="true" collapsed="false" toggleTitle="Basic Filter">
+                <p:panelGrid id="filter" styleClass="filterTable">
+                    <p:row>
+                        <p:column>
+                            <p:outputLabel value="Type"/>
+                        </p:column>
+                        <p:column>
+                            <p:selectOneMenu id="pType" value="#{systemLogController.filter.type}">
+                                <f:selectItem itemLabel="-- Select One --" itemValue=""/>
+                                <f:selectItems value="#{systemLogController.systemLogTypes}" var="value" itemLabel="#{value.name()}"
+                                               itemValue="#{value}"/>
+                            </p:selectOneMenu>
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="Message"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="pMessage" value="#{systemLogController.filter.message}"/>
+                        </p:column>
+                        <p:column>
+                            <p:outputLabel value="Who"/>
+                        </p:column>
+                        <p:column>
+                            <p:inputText id="pWho" value="#{systemLogController.filter.createdBy}"/>
+                        </p:column>
+                    </p:row>
+                </p:panelGrid>
+            </p:panel>
+
+            <p:panelGrid columns="6" styleClass="filterTable" style="margin-top:5px;margin-bottom: 10px;">
+                <p:commandButton id="filterButton" action="#{systemLogController.onFilter()}" value="Filter" update=":fCenter:list" onclick="table.getPaginator().setPage(0)"/>
+                <p:commandButton action="#{systemLogController.onResetFilter()}" value="Reset" update=":fCenter:list :fCenter:filter" onclick="table.getPaginator().setPage(0)"/>
+            </p:panelGrid>
+        </h:panelGroup>
+
+        <p:dataTable widgetVar="table" id="systemLogTable" value="#{systemLogController.model}" var="item" rows="15" paginator="true" lazy="true"
+                     paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+                     rowsPerPageTemplate="20,50">
+            <p:column>
+                <p:rowToggler/>
+            </p:column>
+            <p:column sortBy="#{item.createdDate}" headerText="When" style="white-space: nowrap !important;">
+                <h:outputText value="#{item.createdDate}" converter="#{dateTimeConverter}"/>
+            </p:column>
+            <p:column sortBy="#{item.createdBy}" headerText="Who" style="white-space: nowrap !important"><h:outputText value="#{item.createdBy}"/></p:column>
+            <p:column sortBy="#{item.type}" headerText="What"><h:outputText value="#{item.type}"/></p:column>
+            <p:column style="width:100%;" sortBy="#{item.message}" headerText="Message">
+                <dpc:abbreviate value="#{item.message}" length="300"/>
+            </p:column>
+            <p:rowExpansion>
+                #{item.message}
+            </p:rowExpansion>
+        </p:dataTable>
+    </ui:define>
+</ui:composition>
+</html>

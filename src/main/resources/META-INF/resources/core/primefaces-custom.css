@@ -1,0 +1,15 @@
+.ui-widget {
+    font-size: 12px !important;
+}
+
+.ui-selectonemenu-trigger {
+    width: auto !important;
+}
+
+.ui-menu {
+    width: 200px !important;
+}
+
+.ui-menubutton {
+    margin-right: 1px;
+}

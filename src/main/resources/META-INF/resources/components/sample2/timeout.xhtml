@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:composite="http://java.sun.com/jsf/composite" xmlns:p="http://primefaces.org/ui"
+        >
+<composite:interface>
+</composite:interface>
+
+<composite:implementation>
+
+
+    <p:dialog id="timeoutSession"
+              header="Session is about to expire"
+              widgetVar="timeoutDialog"
+              showEffect="fade" hideEffect="fade"
+              modal="true"
+              width="400"
+              height="250"
+              closable="true"
+              draggable="false"
+              resizable="false"
+              appendToBody="true"
+              onHide="closeDialog()"
+            >
+        <br/>
+
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float: left; margin: 8px 8px 0;"/>
+            <p:panel>
+                You will soon be logged off and redirected to the login page.
+                <span id="dialog-countdown" style="font-weight: bold"></span>
+
+                <p>Prevent session expiring by closing this dialog.</p>
+                <p:commandButton value="Close" type="button" onclick="timeoutDialog.hide()"/>
+            </p:panel>
+        </p>
+        <br/>
+
+    </p:dialog>
+
+    <script type="text/javascript">
+
+        var sessionLength = #{session.maxInactiveInterval}; // seconds
+        var idleCount = 0;
+        var sessionEndTime;
+        var timer;
+        var warningPeriod = 2 * 60 * 1000;
+        var dialogActive = false;
+        var logoutPage = "#{request.contextPath}/logout.xhtml";
+        var buffer = 10000;
+
+        function displayWarningIfRequired() {
+//            console.log('checking');
+//            console.log()
+
+            if ($.now() > sessionEndTime) {
+                window.location = logoutPage;
+                return;
+            }
+
+            if (($.now()) > sessionEndTime - warningPeriod &amp;&amp; !dialogActive) {
+                openDialog();
+            }
+
+            timer = setTimeout("displayWarningIfRequired()", 10000);
+        }
+
+        function updateSessionEndTime() {
+            sessionEndTime = $.now() + sessionLength * 1000 - buffer;
+//            console.log('sessionEndTime = '+new Date(sessionEndTime));
+        }
+
+        function closeDialog() {
+            dialogActive = false;
+            keepAlive();
+        }
+
+        function openDialog() {
+            dialogActive = true;
+            timeoutDialog.show();
+        }
+
+        function keepAlive() {
+//            console.log("keepalive");
+            $.ajax({
+                url: "#{request.contextPath}/keepalive.xhtml",
+                cache: false
+            });
+            updateSessionEndTime();
+        }
+
+        $(document).ready(function () {
+            $(':input').change(function () {
+//                console.log('change');
+                keepAlive();
+            });
+            updateSessionEndTime();
+            displayWarningIfRequired();
+        });
+
+    </script>
+</composite:implementation>
+
+</html>

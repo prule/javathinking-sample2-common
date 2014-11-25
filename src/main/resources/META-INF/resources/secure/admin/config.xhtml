@@ -1,0 +1,44 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/theme.xhtml">
+    <ui:param name="centerTitle" value="Config"/>
+
+    <ui:define name="center">
+
+        <p:dataTable id="configList" value="#{configController.configs}" var="item" editable="true" editMode="row">
+            <p:ajax event="rowEdit" listener="#{configController.onEdit}" update=":fTop:header:growl :fCenter:configList"/>
+            <p:ajax event="rowEditCancel" listener="#{configController.onCancel}" update=":fTop:header:growl :fCenter:configList"/>
+
+            <p:column headerText="Name">
+                <h:outputText value="#{item.name}"/>
+            </p:column>
+            <p:column headerText="Description">
+                <h:outputText value="#{item.description}"/>
+            </p:column>
+            <p:column headerText="Value">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{item.value}"/>
+                    </f:facet>
+                    <f:facet name="input">
+                        <h:inputText value="#{item.value}"/>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+            <p:column headerText="Modified">
+                <h:outputText value="#{item.modifiedBy} @ #{item.modifiedDate}"/>
+            </p:column>
+            <p:column>
+                <p:rowEditor/>
+            </p:column>
+            <f:facet name="footer">
+            </f:facet>
+        </p:dataTable>
+    </ui:define>
+</ui:composition>
+</html>

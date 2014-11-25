@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/theme.xhtml">
+    <ui:param name="centerTitle" value="Health Check"/>
+
+
+    <ui:define name="center">
+
+        <p>
+            When viewing this page, the system will attempt to communicate with external resources.
+            If the communication is successful, it will display the time taken to execute the query (in milliseconds).
+            If unsuccessful, it will display "ERROR".
+        </p>
+
+        <p>
+            In the event of system failure, use this page to determine which resources the application cannot talk to.
+            You may also view the <a target="_blank" href="${request.contextPath}/services/health">JSON feed</a>.
+        </p>
+
+        <p:dataTable id="checkList" value="#{healthCheckController.result.entrySet().toArray()}" var="item">
+
+            <p:column headerText="Name">
+                <h:outputText value="#{item.getKey()}"/>
+            </p:column>
+            <p:column headerText="Milliseconds">
+                <h:outputText value="#{item.getValue()}"/>
+            </p:column>
+        </p:dataTable>
+    </ui:define>
+</ui:composition>
+</html>

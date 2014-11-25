@@ -1,0 +1,48 @@
+.noborders {
+    background-color: inherit;
+    border: none !important;
+}
+
+.noborders td {
+    border: none !important;
+}
+
+.noborders tr {
+    border: none !important;
+}
+
+.border {
+    background-color: inherit;
+    border: 1px solid #999 !important;
+}
+
+.border td {
+    border: 1px solid #999 !important;
+}
+
+.border tr {
+    border: 1px solid #999 !important;
+}
+
+.twoColTable td:first-child {
+    text-align: right !important;
+    font-weight: bold;
+    vertical-align: middle;
+}
+
+.twoColWideTable td:first-child {
+    text-align: right !important;
+    font-weight: bold;
+    vertical-align: middle;
+    width: 150px;
+}
+
+.twoColWideTable td:nth-child(2) {
+    text-align: left !important;
+    vertical-align: middle;
+    width: 300px;
+}
+
+.twoColWideTable td:nth-child(2) input {
+    width: 100%;
+}

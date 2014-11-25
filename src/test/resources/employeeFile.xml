@@ -1,0 +1,39 @@
+<beanio xmlns="http://www.beanio.org/2012/03"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.beanio.org/2012/03 http://www.beanio.org/2012/03/mapping.xsd">
+
+    <stream name="employeeFile" format="csv">
+        <record name="header" order="1" minOccurs="1" maxOccurs="1"
+                class="com.javathinking.sample2.common.file.input.beanio.example.Header">
+            <field name="recordType" rid="true" literal="Header" ignore="true"/>
+            <field name="fileDate" format="MMddyyyy"/>
+        </record>
+        <group name="departmentGroup" order="2" minOccurs="0" maxOccurs="unbounded">
+            <record name="deptHeader" order="1" minOccurs="1" maxOccurs="1"
+                    class="com.javathinking.sample2.common.file.input.beanio.example.DeptHeader">
+                <field name="recordType" rid="true" literal="DeptHeader" ignore="true"/>
+                <field name="departmentName"/>
+            </record>
+            <record name="employee" order="2" minOccurs="0" maxOccurs="unbounded"
+                    class="com.javathinking.sample2.common.file.input.beanio.example.Employee">
+                <field name="recordType" rid="true" literal="Detail" ignore="true"/>
+                <field name="firstName"/>
+                <field name="lastName"/>
+                <field name="title"/>
+                <field name="salary"/>
+                <field name="hireDate" format="MMddyyyy"/>
+            </record>
+            <record name="deptTrailer" order="3" minOccurs="1" maxOccurs="1"
+                    class="com.javathinking.sample2.common.file.input.beanio.example.DeptTrailer">
+                <field name="recordType" rid="true" literal="DeptTrailer" ignore="true"/>
+                <field name="employeeCount"/>
+            </record>
+        </group>
+        <record name="trailer" order="3" minOccurs="1" maxOccurs="1"
+                class="com.javathinking.sample2.common.file.input.beanio.example.Trailer">
+            <field name="recordType" rid="true" literal="Trailer" ignore="true"/>
+            <field name="departmentCount"/>
+        </record>
+    </stream>
+
+</beanio>
